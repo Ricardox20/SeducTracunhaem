@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Lock, Mail, ArrowRight, Loader } from 'lucide-react';
 import { useNavigate } from 'react-router-dom'; // <--- Para redirecionar
 import { useAuth } from '../contexts/AuthContext'; // <--- Nosso cérebro
-import logoConectiva from '../img/conectiva-logo.jpg';
+import logoSeduc from '../img/seduc-logo2.jpg';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -21,7 +21,7 @@ export default function Login() {
         try {
             // Chama o AuthContext. Ele vai bater no back, salvar token e definir o user
             const destino = await signIn(email, senha);
-            
+
             // Se deu certo, o contexto devolve pra onde devemos ir (Admin ou Portal)
             navigate(destino);
 
@@ -33,21 +33,21 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-conectiva-navy p-4 relative overflow-hidden">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-seduc-primary p-4 relative overflow-hidden">
 
-            <div className="absolute inset-0 opacity-5 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-conectiva-lime to-transparent"></div>
+            <div className="absolute inset-0 opacity-5 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-seduc-secondary to-transparent"></div>
 
             <div className="w-full max-w-[450px] relative z-10">
 
                 {/* Cabeçalho */}
                 <div className="text-center mb-8">
                     <img
-                        src={logoConectiva}
-                        alt="Logo Conectiva"
+                        src={logoSeduc}
+                        alt="Logo Seduc"
                         className="h-16 w-auto mx-auto mb-4 rounded-xl shadow-lg shadow-black/20"
                     />
                     <h1 className="text-3xl font-bold text-white tracking-tight">
-                        Conectiva<span className="text-conectiva-lime">.</span>
+                        Seduc Tracunhaem<span className="text-seduc-secondary">.</span>
                     </h1>
                     <p className="text-slate-300 mt-2">Sistema de Gestão Acadêmica</p>
                 </div>
@@ -67,7 +67,7 @@ export default function Login() {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-conectiva-navy/20 focus:border-conectiva-navy transition outline-none text-gray-700 placeholder-gray-400"
+                                    className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-seduc-primary/20 focus:border-seduc-primary transition outline-none text-gray-700 placeholder-gray-400"
                                     placeholder="Email institucional"
                                     required
                                 />
@@ -82,7 +82,7 @@ export default function Login() {
                                     type="password"
                                     value={senha}
                                     onChange={(e) => setSenha(e.target.value)}
-                                    className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-conectiva-navy/20 focus:border-conectiva-navy transition outline-none text-gray-700 placeholder-gray-400"
+                                    className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-seduc-primary/20 focus:border-seduc-primary transition outline-none text-gray-700 placeholder-gray-400"
                                     placeholder="Sua senha"
                                     required
                                 />
@@ -98,7 +98,7 @@ export default function Login() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-conectiva-navy text-white py-3.5 rounded-lg font-bold hover:bg-slate-800 active:scale-[0.99] transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-conectiva-navy/20 disabled:opacity-70"
+                            className="w-full bg-seduc-primary text-white py-3.5 rounded-lg font-bold hover:bg-green-800 active:scale-[0.99] transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-seduc-primary/20 disabled:opacity-70"
                         >
                             {loading ? (
                                 <>
@@ -106,14 +106,14 @@ export default function Login() {
                                 </>
                             ) : (
                                 <>
-                                    Entrar <ArrowRight size={20} className="text-conectiva-lime" />
+                                    Entrar <ArrowRight size={20} className="text-seduc-secondary" />
                                 </>
                             )}
                         </button>
                     </form>
                 </div>
                 <p className="text-center text-slate-400 text-sm mt-8">
-                    © 2026 Connectiva. Todos os direitos reservados.
+                    © 2026 Seduc Tracunhaem. Todos os direitos reservados.
                 </p>
             </div>
         </div>

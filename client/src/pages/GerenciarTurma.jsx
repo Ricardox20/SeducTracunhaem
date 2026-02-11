@@ -188,10 +188,10 @@ export default function GerenciarTurma() {
             resetProf();
             carregarProfessoresAlocados();
         } catch (error) {
-    // Vai pegar a mensagem "Este professor já está alocado..." que mandamos no backend
-    const msg = error.response?.data?.error || "Erro ao alocar.";
-    alert(`❌ ${msg}`);
-}
+            // Vai pegar a mensagem "Este professor já está alocado..." que mandamos no backend
+            const msg = error.response?.data?.error || "Erro ao alocar.";
+            alert(`❌ ${msg}`);
+        }
     };
 
     if (!turma) return <div className="p-8 text-center text-gray-500">Carregando turma...</div>;
@@ -202,14 +202,14 @@ export default function GerenciarTurma() {
             {/* --- CABEÇALHO --- */}
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6">
                 <div className="flex items-center gap-3 mb-4 text-gray-500 text-sm">
-                    <Link to="/turmas" className="hover:text-conectiva-navy flex items-center gap-1"><ArrowLeft size={14} /> Voltar para Turmas</Link>
+                    <Link to="/turmas" className="hover:text-seduc-primary flex items-center gap-1"><ArrowLeft size={14} /> Voltar para Turmas</Link>
                     <span>/</span>
                     <span>Gerenciamento</span>
                 </div>
 
                 <div className="flex justify-between items-start">
                     <div>
-                        <h1 className="text-2xl font-bold text-conectiva-navy">{turma.codigo}</h1>
+                        <h1 className="text-2xl font-bold text-seduc-primary">{turma.codigo}</h1>
                         <p className="text-gray-600">{turma.nome_curso} • {turma.turno}</p>
                     </div>
                     <div className={`px-3 py-1 rounded text-xs font-bold uppercase ${turma.ativa ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
@@ -222,19 +222,19 @@ export default function GerenciarTurma() {
             <div className="flex border-b border-gray-200 mb-6">
                 <button
                     onClick={() => setActiveTab('disciplinas')}
-                    className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 transition ${activeTab === 'disciplinas' ? 'border-conectiva-navy text-conectiva-navy' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+                    className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 transition ${activeTab === 'disciplinas' ? 'border-seduc-primary text-seduc-primary' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
                 >
                     <Book size={18} /> Grade Curricular
                 </button>
                 <button
                     onClick={() => setActiveTab('professores')}
-                    className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 transition ${activeTab === 'professores' ? 'border-conectiva-navy text-conectiva-navy' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+                    className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 transition ${activeTab === 'professores' ? 'border-seduc-primary text-seduc-primary' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
                 >
                     <GraduationCap size={18} /> Professores
                 </button>
                 <button
                     onClick={() => setActiveTab('alunos')}
-                    className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 transition ${activeTab === 'alunos' ? 'border-conectiva-navy text-conectiva-navy' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+                    className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 transition ${activeTab === 'alunos' ? 'border-seduc-primary text-seduc-primary' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
                 >
                     <Users size={18} /> Alunos (Matrículas)
                 </button>
@@ -309,7 +309,7 @@ export default function GerenciarTurma() {
                                         {!aloc.ativo && <History size={14} className="text-gray-400" />}
                                     </h4>
 
-                                    <div className="text-sm text-conectiva-navy font-medium flex items-center gap-1 mt-1">
+                                    <div className="text-sm text-seduc-primary font-medium flex items-center gap-1 mt-1">
                                         <Book size={14} /> {aloc.disciplina}
                                     </div>
 
@@ -356,7 +356,7 @@ export default function GerenciarTurma() {
                                             </span>
                                             <button
                                                 onClick={() => reintegrarProfessor(aloc.id)}
-                                                className="text-conectiva-navy bg-blue-50 hover:bg-conectiva-navy hover:text-white p-2 rounded-full transition shadow-sm"
+                                                className="text-seduc-primary bg-blue-50 hover:bg-seduc-primary hover:text-white p-2 rounded-full transition shadow-sm"
                                                 title="Reintegrar Professor"
                                             >
                                                 <RefreshCw size={16} />
@@ -431,7 +431,7 @@ export default function GerenciarTurma() {
                             {/* CABEÇALHO DA SELEÇÃO */}
                             <div className="flex justify-between items-center mb-4 bg-blue-50 p-4 rounded-lg border border-blue-100">
                                 <div className="flex items-center gap-3">
-                                    <button onClick={() => { setModoAdicao(false); setBuscaAlunos(''); }} className="text-gray-500 hover:text-conectiva-navy">
+                                    <button onClick={() => { setModoAdicao(false); setBuscaAlunos(''); }} className="text-gray-500 hover:text-seduc-primary">
                                         <ArrowLeft size={20} />
                                     </button>
                                     <div>
@@ -442,7 +442,7 @@ export default function GerenciarTurma() {
                                 <button
                                     onClick={realizarMatricula}
                                     disabled={selecionados.length === 0}
-                                    className="bg-conectiva-navy text-white px-6 py-2 rounded-lg font-bold shadow-lg hover:bg-slate-800 disabled:opacity-50 transition"
+                                    className="bg-seduc-primary text-white px-6 py-2 rounded-lg font-bold shadow-lg hover:bg-white hover:text-seduc-primary border border-transparent hover:border-seduc-primary disabled:opacity-50 transition"
                                 >
                                     Confirmar Matrícula
                                 </button>
@@ -493,7 +493,7 @@ export default function GerenciarTurma() {
                                                         >
                                                             <td className="p-4">
                                                                 {isSelected
-                                                                    ? <CheckSquare size={20} className="text-conectiva-navy" />
+                                                                    ? <CheckSquare size={20} className="text-seduc-primary" />
                                                                     : <Square size={20} className="text-gray-300" />
                                                                 }
                                                             </td>
@@ -603,8 +603,8 @@ export default function GerenciarTurma() {
 
             {/* ESTILOS LOCAIS (Pode mover pro CSS global se quiser) */}
             <style>{`
-        .btn-add { background: #ccff00; color: #0f172a; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: bold; display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; transition: all 0.2s; }
-        .btn-add:hover { background: #bfff00; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .btn-add { background: #ffffff; color: #069603; border: 1px solid #069603; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: bold; display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; transition: all 0.2s; }
+        .btn-add:hover { background: #f0fdf4; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
         .btn-add:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(100%); }
         .empty-state { text-align: center; padding: 3rem; border: 1px dashed #e5e7eb; border-radius: 0.75rem; color: #9ca3af; }
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 50; }
@@ -612,10 +612,10 @@ export default function GerenciarTurma() {
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; font-weight: bold; font-size: 1.125rem; color: #1f2937; }
         .label { display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.25rem; }
         .input-base { width: 100%; padding: 0.6rem; border: 1px solid #d1d5db; border-radius: 0.5rem; outline: none; }
-        .input-base:focus { border-color: #0f172a; ring: 1px solid #0f172a; }
+        .input-base:focus { border-color: #069603; ring: 1px solid #069603; }
         .error-msg { color: #ef4444; font-size: 0.75rem; margin-top: 0.25rem; display: block; }
-        .btn-primary { background: #0f172a; color: white; padding: 0.75rem; border-radius: 0.5rem; font-weight: bold; margin-top: 1rem; transition: background 0.2s; }
-        .btn-primary:hover { background: #1e293b; }
+        .btn-primary { background: #069603; color: white; padding: 0.75rem; border-radius: 0.5rem; font-weight: bold; margin-top: 1rem; transition: background 0.2s; }
+        .btn-primary:hover { background: #058202; }
       `}</style>
         </div>
     );

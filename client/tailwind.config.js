@@ -7,8 +7,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        'conectiva-navy': '#0f172a', 
-        'conectiva-lime': '#ccff00', 
+        'seduc-primary': '#046c02',
+        'seduc-secondary': '#ffffff',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

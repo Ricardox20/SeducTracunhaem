@@ -18,7 +18,8 @@ app.use((req, res, next) => {
     const allowedOrigins = [
         'http://localhost:5173',          // Seu Front Local (Vite)
         'http://localhost:3000',          // Se usar Create React App
-        'http://127.0.0.1:5173',          // Variação do localhost
+        'http://127.0.0.1:5173',
+        'http://localhost:5174',          // Variação do localhost
         'https://somosconexaosocial.org'  // Seu site em produção (pra garantir)
     ];
 

@@ -21,7 +21,7 @@ import GerenciarTurma from './pages/GerenciarTurma';
 import DashboardProfessor from './pages/professor/DashboardProfessor';
 import DiarioClasse from './pages/professor/DiarioClasse';
 
-import logoConectiva from '././img/conectiva-logo.jpg';
+import logoSeduc from './img/seduc-logo2.jpg';
 import RelatoriosTurma from './pages/RelatoriosTurma';
 
 // =================================================================
@@ -31,7 +31,7 @@ const PrivateRoute = ({ children, allowedRoles }) => {
   const { signed, loading, user } = useAuth();
 
   if (loading) {
-    return <div className="h-screen flex items-center justify-center bg-conectiva-navy text-white">Carregando sistema...</div>;
+    return <div className="h-screen flex items-center justify-center bg-seduc-primary text-white">Carregando sistema...</div>;
   }
 
   // Não tá logado? Manda pro Login
@@ -68,14 +68,14 @@ const LayoutAdmin = ({ children }) => {
 
       <main className="flex-1 md:ml-64 transition-all duration-300">
         {/* Header Mobile */}
-        <div className="md:hidden bg-conectiva-navy text-white p-4 flex items-center justify-between sticky top-0 z-30 shadow-md">
+        <div className="md:hidden bg-seduc-primary text-white p-4 flex items-center justify-between sticky top-0 z-30 shadow-md">
           <div className="flex items-center gap-3">
             <button onClick={() => setSidebarOpen(true)}>
-              <Menu size={28} className="text-conectiva-lime" />
+              <Menu size={28} className="text-seduc-secondary" />
             </button>
-            <span className="font-bold text-lg">Connectiva.</span>
+            <span className="font-bold text-lg">Seduc.</span>
           </div>
-          <div className="w-8 h-8 rounded-full bg-conectiva-lime text-conectiva-navy flex items-center justify-center font-bold text-xs">
+          <div className="w-8 h-8 rounded-full bg-seduc-secondary text-seduc-primary flex items-center justify-center font-bold text-xs">
             {user?.nome?.substring(0, 2).toUpperCase()}
           </div>
         </div>
@@ -99,21 +99,21 @@ const LayoutProfessor = ({ children }) => {
     <div className="min-h-screen bg-gray-50">
 
       {/* --- HEADER FIXO AZUL MARINHO --- */}
-      <header className="bg-[#0f0155] text-white shadow-md border-b-[3px] border-[#bcfe2b] sticky top-0 z-50">
+      <header className="bg-seduc-primary text-white shadow-md border-b-[3px] border-seduc-secondary sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
 
           {/* Logo e Marca */}
           <div className="flex items-center gap-3">
             <img
-              src={logoConectiva}
-              alt="Logo Conectiva"
+              src={logoSeduc}
+              alt="Logo Seduc"
               className="h-10 w-auto rounded-lg border-2 border-white/20 shadow-sm"
             />
             <div>
               <h1 className="text-xl font-bold tracking-tight leading-tight">
-                Connectiva<span className="text-[#bcfe2b]">.</span>
+                Seduc Tracunhaem<span className="text-seduc-secondary">.</span>
               </h1>
-              <p className="text-[10px] text-blue-200 uppercase tracking-wider hidden md:block">
+              <p className="text-[10px] text-blue-100 uppercase tracking-wider hidden md:block">
                 Portal do Professor
               </p>
             </div>
@@ -123,15 +123,15 @@ const LayoutProfessor = ({ children }) => {
           <div className="flex items-center gap-6">
             <div className="text-right hidden md:block">
               <p className="font-medium text-sm">Olá, Prof. {user?.nome?.split(' ')[0]}</p>
-              <p className="text-[10px] text-blue-200 uppercase">Docente</p>
+              <p className="text-[10px] text-blue-100 uppercase">Docente</p>
             </div>
 
             <button
               onClick={signOut}
-              className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg transition-colors text-sm font-medium border border-transparent hover:border-white/10"
+              className="flex items-center gap-2 bg-seduc-primary border border-white text-white px-3 py-2 rounded-lg transition-colors text-sm font-medium hover:bg-white hover:text-seduc-primary"
               title="Sair do sistema"
             >
-              <LogOut size={18} className="text-[#bcfe2b]" />
+              <LogOut size={18} />
               <span className="hidden md:inline">Sair</span>
             </button>
           </div>
