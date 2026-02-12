@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Book, Users, Plus, X, GraduationCap, Calendar, Trash2, ArrowLeft, CheckSquare, Square, UserMinus, Search, Power, History, RefreshCw } from 'lucide-react';
-import axios from 'axios';
-import { useForm } from 'react-hook-form'; // <--- O REI DA VALIDAÇÃO
-import { API_BASE_URL } from '../../infra/apiConfig';
+import { useForm } from 'react-hook-form';
+import { apiService } from '../services/api';
 
 export default function GerenciarTurma() {
     const { id } = useParams();
@@ -38,7 +37,7 @@ export default function GerenciarTurma() {
         if (!window.confirm("Remover esta disciplina da grade da turma?")) return;
 
         try {
-            await axios.delete(`${API_BASE_URL}/turmas/disciplinas/${idTurmaDisciplina}`);
+            await apiService.removerDisciplinaTurma(idTurmaDisciplina);
             setGrade(prev => prev.filter(item => item.id !== idTurmaDisciplina));
             alert("✅ Disciplina removida.");
         } catch (error) {
@@ -75,19 +74,20 @@ export default function GerenciarTurma() {
         }
     }, [id, activeTab]);
     // --- LOADS ---
-    const carregarTurma = async () => axios.get(`${API_BASE_URL}/turmas/${id}`).then(res => setTurma(res.data));
-    const carregarGrade = async () => axios.get(`${API_BASE_URL}/turmas/${id}/disciplinas`).then(res => setGrade(res.data));
-    const carregarProfessoresAlocados = async () => axios.get(`${API_BASE_URL}/turmas/${id}/professores`).then(res => setProfessoresAlocados(res.data));
-    const carregarMatriculados = async () => axios.get(`${API_BASE_URL}/turmas/${id}/matriculados`).then(res => setMatriculados(res.data));
-    const carregarDisponiveis = async () => axios.get(`${API_BASE_URL}/turmas/${id}/disponiveis`).then(res => setDisponiveis(res.data));
+    // --- LOADS ---
+    const carregarTurma = async () => setTurma(await apiService.getTurmaById(id));
+    const carregarGrade = async () => setGrade(await apiService.getGradeTurma(id));
+    const carregarProfessoresAlocados = async () => setProfessoresAlocados(await apiService.getProfessoresAlocados(id));
+    const carregarMatriculados = async () => setMatriculados(await apiService.getMatriculados(id));
+    const carregarDisponiveis = async () => setDisponiveis(await apiService.getAlunosDisponiveis(id));
 
     const carregarListasAuxiliares = async () => {
         const [resDisc, resProf] = await Promise.all([
-            axios.get(`${API_BASE_URL}/disciplinas`),
-            axios.get(`${API_BASE_URL}/professores`)
+            apiService.getDisciplinas(),
+            apiService.getProfessores()
         ]);
-        setCatalogoDisciplinas(resDisc.data);
-        setListaProfessores(resProf.data);
+        setCatalogoDisciplinas(resDisc);
+        setListaProfessores(resProf);
     };
 
     const toggleSelecao = (alunoId) => {
@@ -102,7 +102,7 @@ export default function GerenciarTurma() {
         if (!window.confirm("Confirmar o retorno deste professor à turma a partir de hoje?")) return;
 
         try {
-            await axios.post(`${API_BASE_URL}/alocacoes/${alocacaoAntigaId}/reintegrar`);
+            await apiService.reintegrarProfessor(alocacaoAntigaId);
             alert("✅ Professor reintegrado!");
             carregarProfessoresAlocados(); // Recarrega tudo pra mostrar o novo card ativo
         } catch (error) {
@@ -115,7 +115,7 @@ export default function GerenciarTurma() {
         if (!window.confirm("Confirmar o encerramento da atuação deste professor? Ele ficará salvo no histórico.")) return;
 
         try {
-            await axios.patch(`${API_BASE_URL}/alocacoes/${alocacaoId}/encerrar`);
+            await apiService.encerrarAlocacao(alocacaoId);
             alert("✅ Alocação encerrada.");
             // Atualiza a lista localmente para refletir a mudança sem recarregar tudo
             setProfessoresAlocados(prev => prev.map(p =>
@@ -130,7 +130,7 @@ export default function GerenciarTurma() {
         if (!window.confirm("Tem certeza que deseja remover este professor desta matéria?")) return;
 
         try {
-            await axios.delete(`${API_BASE_URL}/alocacoes/${alocacaoId}`);
+            await apiService.desvincularProfessor(alocacaoId);
             alert("✅ Professor removido.");
             // Atualiza a lista na tela
             setProfessoresAlocados(prev => prev.filter(p => p.id !== alocacaoId));
@@ -145,7 +145,7 @@ export default function GerenciarTurma() {
         if (selecionados.length === 0) return alert("Selecione pelo menos um aluno.");
 
         try {
-            await axios.post(`${API_BASE_URL}/turmas/${id}/matriculas`, { alunos_ids: selecionados });
+            await apiService.matricularAlunos(id, selecionados);
             alert("✅ Alunos matriculados com sucesso!");
             setSelecionados([]);
             setModoAdicao(false);
@@ -159,7 +159,7 @@ export default function GerenciarTurma() {
     const removerMatricula = async (matriculaId) => {
         if (!window.confirm("Remover este aluno da turma?")) return;
         try {
-            await axios.delete(`${API_BASE_URL}/matriculas/${matriculaId}`);
+            await apiService.removerMatricula(matriculaId);
             setMatriculados(prev => prev.filter(m => m.matricula_id !== matriculaId));
         } catch (error) {
             alert("Erro ao remover.");
@@ -170,7 +170,7 @@ export default function GerenciarTurma() {
 
     const onSubmitDisciplina = async (data) => {
         try {
-            await axios.post(`${API_BASE_URL}/turmas/${id}/disciplinas`, data);
+            await apiService.adicionarDisciplinaTurma(id, data);
             alert("✅ Matéria adicionada à grade!");
             setModalDiscOpen(false);
             resetDisc();
@@ -182,7 +182,7 @@ export default function GerenciarTurma() {
 
     const onSubmitProfessor = async (data) => {
         try {
-            await axios.post(`${API_BASE_URL}/alocacoes`, data);
+            await apiService.alocarProfessor(data);
             alert("✅ Professor alocado com sucesso!");
             setModalProfOpen(false);
             resetProf();

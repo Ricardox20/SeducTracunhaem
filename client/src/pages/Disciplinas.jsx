@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Book, Plus, Trash2, Clock, Bookmark } from 'lucide-react';
-import axios from 'axios';
-import { API_BASE_URL } from '../../infra/apiConfig';
+import { apiService } from '../services/api';
 
 export default function Disciplinas() {
   const [disciplinas, setDisciplinas] = useState([]);
@@ -21,13 +20,13 @@ export default function Disciplinas() {
   const carregarDados = async () => {
     try {
       const [respDisc, respCursos] = await Promise.all([
-        axios.get(`${API_BASE_URL}/disciplinas`),
-        axios.get(`${API_BASE_URL}/cursos`)
+        apiService.getDisciplinas(),
+        apiService.getCursos()
       ]);
-      setDisciplinas(respDisc.data);
-      setCursos(respCursos.data);
+      setDisciplinas(respDisc);
+      setCursos(respCursos);
       // Seleciona o primeiro curso automaticamente se houver
-      if (respCursos.data.length > 0) setCursoSelecionado(respCursos.data[0].id);
+      if (respCursos.length > 0) setCursoSelecionado(respCursos[0].id);
     } catch (error) {
       console.error("Erro:", error);
     } finally {
@@ -41,7 +40,7 @@ export default function Disciplinas() {
 
     setSalvando(true);
     try {
-      await axios.post(`${API_BASE_URL}/disciplinas`, {
+      await apiService.createDisciplina({
         curso_id: cursoSelecionado,
         nome: novoNome,
         carga_horaria: novaCarga
@@ -61,7 +60,7 @@ export default function Disciplinas() {
   const handleExcluir = async (id) => {
     if (!window.confirm("Remover esta disciplina do catálogo?")) return;
     try {
-      await axios.delete(`${API_BASE_URL}/disciplinas/${id}`);
+      await apiService.deleteDisciplina(id);
       setDisciplinas(prev => prev.filter(d => d.id !== id));
     } catch (error) {
       alert(error.response?.data?.error || "Erro ao excluir.");

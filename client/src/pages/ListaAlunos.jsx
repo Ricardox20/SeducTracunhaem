@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Search, UserPlus, Edit2, Trash2, User, Phone, Calendar, Fingerprint, ChevronLeft, ChevronRight, AlertTriangle, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import { API_BASE_URL } from '../../infra/apiConfig';
+import { apiService } from '../services/api';
 
 export default function ListaAlunos() {
   const [alunos, setAlunos] = useState([]);
@@ -23,7 +22,7 @@ export default function ListaAlunos() {
 
   const carregarAlunos = async () => {
     try {
-      const { data } = await axios.get(`${API_BASE_URL}/alunos`);
+      const data = await apiService.getAlunos();
       setAlunos(data);
     } catch (error) {
       console.error("Erro ao buscar alunos:", error);
@@ -37,7 +36,8 @@ export default function ListaAlunos() {
     if (!alunoParaDeletar) return;
     setExcluindo(true);
     try {
-      await axios.delete(`${API_BASE_URL}/alunos/${alunoParaDeletar.id}`);
+      // await axios.delete(`${API_BASE_URL}/alunos/${alunoParaDeletar.id}`);
+      // Simulação de delete (apenas visual no mock)
 
       // Remove da lista visualmente sem precisar recarregar tudo
       setAlunos(prev => prev.filter(aluno => aluno.id !== alunoParaDeletar.id));

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Search, UserPlus, Edit2, Trash2, User, Phone, Briefcase, FileText, ChevronLeft, ChevronRight, AlertTriangle } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import { API_BASE_URL } from '../../infra/apiConfig';
+
+import { apiService } from '../services/api';
 
 export default function ListaProfessores() {
   const [professores, setProfessores] = useState([]);
@@ -23,7 +23,7 @@ export default function ListaProfessores() {
 
   const carregarProfessores = async () => {
     try {
-      const { data } = await axios.get(`${API_BASE_URL}/professores`);
+      const data = await apiService.getProfessores();
       setProfessores(data);
     } catch (error) {
       console.error("Erro ao buscar professores:", error);
@@ -36,7 +36,7 @@ export default function ListaProfessores() {
     if (!profParaDeletar) return;
     setExcluindo(true);
     try {
-      await axios.delete(`${API_BASE_URL}/professores/${profParaDeletar.id}`);
+      await apiService.deleteProfessor(profParaDeletar.id);
       setProfessores(prev => prev.filter(p => p.id !== profParaDeletar.id));
       setProfParaDeletar(null);
       alert("✅ Professor excluído com sucesso.");

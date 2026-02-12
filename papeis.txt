@@ -1,0 +1,34 @@
+🏛️ Ator: Secretaria (Administrador Municipal)
+Este perfil tem a visão macro e administrativa de toda a rede.
+
+Gestão de Unidades: Pode visualizar, editar e gerenciar as três escolas configuradas (Joaquim Canuto, Tancredo Neves e Maria Clemilda).
+
+Controle de Pessoal: Visualiza a lista completa de professores e em quais escolas/turmas eles estão alocados.
+
+Matriz Curricular: Supervisiona se as disciplinas de cada nível (Infantil, Iniciais e Finais) estão sendo seguidas conforme o padrão da Secretaria.
+
+Relatórios Consolidados: Acessa a frequência e o desempenho global de todos os 60 alunos da rede para prestação de contas.
+
+👨‍🏫 Ator: Professor (Operacional por Nível)
+Este perfil tem a visão micro, limitada às turmas e escolas onde leciona.
+
+1. Professor de Educação Infantil (Escola Joaquim Canuto)
+Diário de Vivências: Registra o planejamento focado em 'Registro de Vivência', 'Proposta de Desenvolvimento' e 'Organização de Espaço/Tempo'.
+
+Campos de Experiência: Seleciona disciplinas específicas como 'O Eu, O Outro e Nós' e 'Traços, Sons, Cores e Formas'.
+
+Avaliação Qualitativa: Lança Pareceres Descritivos e conceitos de desenvolvimento para seus 10 alunos.
+
+2. Professor de Anos Iniciais (Escola Tancredo Neves)
+Polivalência: Gerencia a maioria das disciplinas da turma, incluindo o campo de 'Aspectos Atitudinais'.
+
+Avaliação Híbrida: Lança notas numéricas (0-10) combinadas com checklists de comportamento e participação.
+
+Planejamento Base: Registra unidades temáticas e atividades para casa alinhadas à BNCC.
+
+3. Professor de Anos Finais (Escola Maria Clemilda)
+Especialidade: Foca em disciplinas específicas como 'Língua Inglesa', 'Matemática' ou 'Ciências'.
+
+Avaliação Quantitativa: Lança notas numéricas por bimestre/trimestre para fechamento de boletim.
+
+Diário de Conteúdo: Detalha competências da BNCC e metodologias aplicadas em sala de aula.

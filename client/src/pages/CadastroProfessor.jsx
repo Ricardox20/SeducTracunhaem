@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { User, MapPin, FileText, CheckCircle, ArrowRight, ArrowLeft, Search, Briefcase, GraduationCap, Edit, AlertCircle } from 'lucide-react';
-import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
-import { API_BASE_URL } from '../../infra/apiConfig';
+import { apiService } from '../services/api';
 
 export default function CadastroProfessor() {
   const { id } = useParams();
@@ -37,14 +36,13 @@ export default function CadastroProfessor() {
   // --- CARREGAR DADOS NA EDIÇÃO ---
   useEffect(() => {
     if (isEditMode) {
-      axios.get(`${API_BASE_URL}/professores/${id}`)
-        .then(response => {
-          const dados = response.data;
+      apiService.getProfessorById(id)
+        .then(dados => {
           if (dados.data_nascimento) dados.data_nascimento = dados.data_nascimento.split('T')[0];
           if (dados.data_contratacao) dados.data_contratacao = dados.data_contratacao.split('T')[0];
           reset(dados);
         })
-        .catch(err => alert("Erro ao carregar professor."));
+        .catch(err => alert("Erro ao carregar professor (MOCK)."));
     }
   }, [id, isEditMode, reset]);
 
@@ -103,7 +101,7 @@ export default function CadastroProfessor() {
     if (cep?.length === 8) {
       setLoadingCep(true);
       try {
-        const { data } = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await apiService.buscarCep(cep);
         if (!data.erro) {
           setValue('endereco', data.logradouro);
           setValue('bairro', data.bairro);
@@ -132,11 +130,11 @@ export default function CadastroProfessor() {
       };
 
       if (isEditMode) {
-        await axios.put(`${API_BASE_URL}/professores/${id}`, dadosLimpos);
-        alert("✅ Professor atualizado!");
+        await apiService.updateProfessor(id, dadosLimpos);
+        alert("✅ Professor atualizado! (MOCK)");
       } else {
-        await axios.post(`${API_BASE_URL}/professores`, dadosLimpos);
-        alert(`✅ Professor cadastrado com sucesso!`);
+        await apiService.createProfessor(dadosLimpos);
+        alert(`✅ Professor cadastrado com sucesso! (MOCK)`);
       }
       navigate('/professores');
     } catch (error) {

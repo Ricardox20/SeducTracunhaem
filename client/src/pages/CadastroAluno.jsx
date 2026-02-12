@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { User, MapPin, FileText, CheckCircle, ArrowRight, ArrowLeft, Search, Edit2 } from 'lucide-react';
-import axios from 'axios';
+
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
-import { API_BASE_URL } from '../../infra/apiConfig';
+import { apiService } from '../services/api';
 
 export default function CadastroAluno() {
     const { id } = useParams();
@@ -32,13 +32,16 @@ export default function CadastroAluno() {
     // --- CARREGAR DADOS NA EDIÇÃO ---
     useEffect(() => {
         if (isEditMode) {
-            axios.get(`${API_BASE_URL}/alunos/${id}`,)
-                .then(response => {
-                    const dados = response.data;
-                    if (dados.data_nascimento) {
-                        dados.data_nascimento = dados.data_nascimento.split('T')[0];
+            apiService.getAlunoById(id)
+                .then(dados => {
+                    if (dados) {
+                        if (dados.data_nascimento) {
+                            dados.data_nascimento = dados.data_nascimento.split('T')[0];
+                        }
+                        reset(dados);
+                    } else {
+                        alert("Aluno não encontrado (Mock).");
                     }
-                    reset(dados);
                 })
                 .catch(err => alert("Erro ao carregar aluno."));
         }
@@ -85,7 +88,7 @@ export default function CadastroAluno() {
         if (cep?.length === 8) {
             setLoadingCep(true);
             try {
-                const { data } = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+                const data = await apiService.buscarCep(cep);
                 if (!data.erro) {
                     setValue('endereco', data.logradouro);
                     setValue('bairro', data.bairro);
@@ -93,7 +96,7 @@ export default function CadastroAluno() {
                     setValue('estado', data.uf);
                     document.getElementById('numero').focus();
                 } else {
-                    alert("CEP não encontrado.");
+                    alert("CEP não encontrado (Simulação).");
                 }
             } catch (error) {
                 alert("Erro na busca.");
@@ -116,11 +119,11 @@ export default function CadastroAluno() {
             };
 
             if (isEditMode) {
-                await axios.put(`${API_BASE_URL}/alunos/${id}`, dadosLimpos);
-                alert("✅ Dados atualizados com sucesso!");
+                await apiService.updateAluno(id, dadosLimpos);
+                alert("✅ Dados atualizados com sucesso! (MOCK)");
             } else {
-                const response = await axios.post(`${API_BASE_URL}/alunos`, dadosLimpos);
-                alert(`✅ Matrícula realizada! Número: ${response.data.matricula}`);
+                const response = await apiService.createAluno(dadosLimpos);
+                alert(`✅ Matrícula realizada! Número: ${response.matricula} (MOCK)`);
             }
 
             navigate('/alunos');

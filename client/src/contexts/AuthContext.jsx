@@ -1,43 +1,34 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import { API_BASE_URL } from '../../infra/apiConfig';
+
 
 const AuthContext = createContext({});
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // --- FORÇAR LOGIN MOCK (SOLICITAÇÃO DO USUÁRIO) ---
+  const [user, setUser] = useState({
+    nome: 'Admin Master (Mock)',
+    email: 'admin@seduc.mock',
+    perfil: 'Master',
+    escolaId: 1,
+    professorId: 1
+  });
+  const [loading, setLoading] = useState(false);
 
+  // Efeito removido pois já iniciamos logado
   useEffect(() => {
-    // Ao iniciar, verifica se tem token salvo no navegador
-    const dadosSalvos = localStorage.getItem('@EscolaTecnica:user');
-    const tokenSalvo = localStorage.getItem('@EscolaTecnica:token');
-
-    if (dadosSalvos && tokenSalvo) {
-      setUser(JSON.parse(dadosSalvos));
-      // Configura o axios pra sempre mandar o token nas requisições
-      axios.defaults.headers.common['Authorization'] = `Bearer ${tokenSalvo}`;
-    }
     setLoading(false);
   }, []);
 
   const signIn = async (email, senha) => {
-    try {
-      const response = await axios.post(`${API_BASE_URL}/login`, { email, senha }, { withCredentials: true });
-      
-      const { token, user, redirectPath } = response.data;
-
-      // Salva no navegador pra não deslogar se der F5
-      localStorage.setItem('@EscolaTecnica:user', JSON.stringify(user));
-      localStorage.setItem('@EscolaTecnica:token', token);
-
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setUser(user);
-
-      return redirectPath; // Retorna pra onde ele deve ir
-    } catch (error) {
-      throw new Error(error.response?.data?.error || 'Erro ao logar');
-    }
+    // Simula login com sucesso para qualquer entrada
+    setUser({
+      nome: 'Admin Master (Mock)',
+      email: email,
+      perfil: 'Master',
+      escolaId: 1,
+      professorId: 1
+    });
+    return '/';
   };
 
   const signOut = () => {
@@ -46,8 +37,48 @@ export function AuthProvider({ children }) {
     window.location.href = '/login';
   };
 
+  // --- ALTERNAR PERFIL MOCK (SIMULADOR) ---
+  // --- ALTERNAR PERFIL MOCK (SIMULADOR) ---
+  const alternarPerfil = (tipo) => {
+    let novoUser = {
+      ...user,
+      nome: 'Admin Master (Mock)',
+      perfil: 'Master',
+      professorId: null,
+      escolaId: null
+    };
+
+    if (tipo === 'ProfessorInfantil') {
+      novoUser = {
+        ...user,
+        nome: 'Prof. Ana (Infantil)',
+        perfil: 'Professor',
+        professorId: 1, // Escola 1
+        escolaId: 1
+      };
+    } else if (tipo === 'ProfessorIniciais') {
+      novoUser = {
+        ...user,
+        nome: 'Prof. Carlos (Iniciais)',
+        perfil: 'Professor',
+        professorId: 2, // Escola 2
+        escolaId: 2
+      };
+    } else if (tipo === 'ProfessorFinais') {
+      novoUser = {
+        ...user,
+        nome: 'Prof. Beatriz (Finais)',
+        perfil: 'Professor',
+        professorId: 3, // Escola 3
+        escolaId: 3
+      };
+    }
+
+    setUser(novoUser);
+  };
+
   return (
-    <AuthContext.Provider value={{ signed: !!user, user, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ signed: !!user, user, loading, signIn, signOut, alternarPerfil }}>
       {children}
     </AuthContext.Provider>
   );

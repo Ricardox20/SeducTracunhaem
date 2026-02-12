@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Calendar, Users, ArrowRight } from 'lucide-react'; // Removi LogOut
-import axios from 'axios';
+import { BookOpen, Calendar, Users, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { API_BASE_URL } from '../../../infra/apiConfig';
+import { apiService } from '../../services/api';
 
 // Removi a importação da Logo daqui, pois já está no App.jsx
 
@@ -22,8 +21,8 @@ export default function DashboardProfessor() {
 
   const carregarMinhasTurmas = async (idProf) => {
     try {
-      const resTurmas = await axios.get(`${API_BASE_URL}/professores/${idProf}/turmas`);
-      setTurmas(resTurmas.data);
+      const resTurmas = await apiService.getTurmasProfessor(idProf);
+      setTurmas(resTurmas);
     } catch (error) {
       console.error("Erro ao buscar turmas:", error);
     } finally {
@@ -69,9 +68,10 @@ export default function DashboardProfessor() {
                   {t.codigo}
                 </span>
 
-                <h3 className="text-xl font-bold text-gray-800 mt-4 mb-2 line-clamp-2 min-h-[3.5rem]" title={t.nome_disciplina}>
+                <h3 className="text-xl font-bold text-gray-800 mt-4 mb-1 line-clamp-2 min-h-[3.5rem]" title={t.nome_disciplina}>
                   {t.nome_disciplina}
                 </h3>
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">{t.nome_escola}</p>
 
                 <p className="text-sm text-gray-500 mb-6 line-clamp-1 border-b border-gray-50 pb-4">
                   {t.nome_curso}

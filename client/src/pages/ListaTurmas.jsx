@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { GraduationCap, Plus, Calendar, Clock, Users, Trash2, ArrowRight, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import { API_BASE_URL } from '../../infra/apiConfig';
+
+import { apiService } from '../services/api';
 import { useForm } from 'react-hook-form';
 
 export default function ListaTurmas() {
@@ -36,13 +36,13 @@ export default function ListaTurmas() {
   const carregarDados = async () => {
     try {
       const [resTurmas, resCursos] = await Promise.all([
-        axios.get(`${API_BASE_URL}/turmas`),
-        axios.get(`${API_BASE_URL}/cursos`)
+        apiService.getTurmas(),
+        apiService.getCursos()
       ]);
-      setTurmas(resTurmas.data);
-      setCursos(resCursos.data);
-      if (resCursos.data.length > 0) {
-        setValue('curso_id', resCursos.data[0].id);
+      setTurmas(resTurmas);
+      setCursos(resCursos);
+      if (resCursos.length > 0) {
+        setValue('curso_id', resCursos[0].id);
       }
     } catch (error) {
       console.error("Erro:", error);
@@ -60,7 +60,7 @@ export default function ListaTurmas() {
 
   const criarTurma = async (data) => {
     try {
-      await axios.post(`${API_BASE_URL}/turmas`, data);
+      await apiService.createTurma(data);
       setModalAberto(false);
       reset(); // Limpa o formulário
       carregarDados();
@@ -75,7 +75,7 @@ export default function ListaTurmas() {
     if (!window.confirm("Tem certeza que deseja tentar excluir esta turma?")) return;
 
     try {
-      await axios.delete(`${API_BASE_URL}/turmas/${id}`);
+      await apiService.deleteTurma(id);
 
       // Se deu certo (Status 200)
       setTurmas(prev => prev.filter(t => t.id !== id));
@@ -133,6 +133,7 @@ export default function ListaTurmas() {
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <h3 className="font-bold text-lg text-gray-800">{turma.codigo}</h3>
+                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">{turma.nome_escola}</p>
                     <p className="text-sm text-gray-500">{turma.nome_curso}</p>
                   </div>
                   <span className={`text-[10px] font-bold px-2 py-1 rounded uppercase ${turma.ativa ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>

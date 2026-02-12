@@ -3,19 +3,35 @@ import { LayoutDashboard, UserPlus, Users, GraduationCap, LogOut, X, Briefcase, 
 import { Link, useLocation } from 'react-router-dom';
 import logoSeduc from '../img/seduc-logo2.jpg'; // <--- Importando a logo
 
+import { useAuth } from '../contexts/AuthContext';
+
 export default function Sidebar({ onLogout, user, isOpen, onClose }) {
+  const { alternarPerfil } = useAuth();
   const location = useLocation();
 
-  const menuItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
-    { icon: UserPlus, label: 'Matricular Aluno', path: '/alunos/novo' },
-    { icon: Users, label: 'Lista de Alunos', path: '/alunos' },
-    { icon: Briefcase, label: 'Professores', path: '/professores' },
-    { icon: Book, label: 'Disciplinas', path: '/disciplinas' },
-    { icon: GraduationCap, label: 'Turmas', path: '/turmas' },
-    { label: 'Relatórios', path: '/relatorios', icon: BarChart3 }
-    // { icon: BookOpen, label: 'Portal Professor', path: '/portal-professor' },
-  ];
+  // --- MENU ITEMS DINÂMICOS PELO PERFIL ---
+  let menuItems = [];
+
+  const perfil = user?.perfil || 'Visitante';
+
+  if (perfil === 'Professor') {
+    menuItems = [
+      { icon: LayoutDashboard, label: 'Dashboard', path: '/professor/dashboard' }, // Dashboard Professor
+      { icon: BookOpen, label: 'Diário de Classe', path: '/professor/diario' },
+      { icon: GraduationCap, label: 'Avaliação', path: '/professor/avaliacao' }
+    ];
+  } else {
+    // Perfil Secretaria / Master
+    menuItems = [
+      { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
+      { icon: UserPlus, label: 'Matricular Aluno', path: '/alunos/novo' },
+      { icon: Users, label: 'Lista de Alunos', path: '/alunos' },
+      { icon: Briefcase, label: 'Professores', path: '/professores' },
+      { icon: Book, label: 'Disciplinas', path: '/disciplinas' },
+      { icon: GraduationCap, label: 'Turmas', path: '/turmas' },
+      { label: 'Relatórios', path: '/relatorios', icon: BarChart3 }
+    ];
+  }
 
   return (
     <>
@@ -75,6 +91,42 @@ export default function Sidebar({ onLogout, user, isOpen, onClose }) {
           </p>
         </div>
 
+
+        {/* --- SIMULADOR DE PERFIL (DEMO) --- */}
+        <div className="px-6 py-4 bg-yellow-50 border-b border-yellow-100">
+          <p className="text-[10px] font-bold text-yellow-800 uppercase mb-2 tracking-wider">Simulador de Perfil</p>
+
+          <button
+            onClick={() => user.perfil !== 'Master' && alternarPerfil('Master')}
+            className={`w-full text-xs font-bold py-1.5 rounded-md transition mb-2 ${user?.perfil === 'Master' ? 'bg-white text-yellow-900 shadow-sm' : 'text-yellow-700 hover:bg-yellow-100 border border-yellow-200'}`}
+          >
+            Secretaria (Visão Geral)
+          </button>
+
+          <div className="flex gap-1">
+            <button
+              onClick={() => alternarPerfil('ProfessorInfantil')}
+              title="Ed. Infantil (Joaquim Canuto)"
+              className={`flex-1 text-[10px] font-bold py-1.5 rounded-md transition ${user?.nome?.includes('Infantil') ? 'bg-white text-yellow-900 shadow-sm' : 'text-yellow-700 hover:bg-yellow-100 border border-yellow-200'}`}
+            >
+              Infantil
+            </button>
+            <button
+              onClick={() => alternarPerfil('ProfessorIniciais')}
+              title="Anos Iniciais (Tancredo Neves)"
+              className={`flex-1 text-[10px] font-bold py-1.5 rounded-md transition ${user?.nome?.includes('Iniciais') ? 'bg-white text-yellow-900 shadow-sm' : 'text-yellow-700 hover:bg-yellow-100 border border-yellow-200'}`}
+            >
+              Iniciais
+            </button>
+            <button
+              onClick={() => alternarPerfil('ProfessorFinais')}
+              title="Anos Finais (Maria Clemilda)"
+              className={`flex-1 text-[10px] font-bold py-1.5 rounded-md transition ${user?.nome?.includes('Finais') ? 'bg-white text-yellow-900 shadow-sm' : 'text-yellow-700 hover:bg-yellow-100 border border-yellow-200'}`}
+            >
+              Finais
+            </button>
+          </div>
+        </div>
 
         {/* --- NAVEGAÇÃO --- */}
         <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">

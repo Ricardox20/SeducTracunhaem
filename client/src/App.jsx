@@ -20,6 +20,7 @@ import ListaTurmas from './pages/ListaTurmas';
 import GerenciarTurma from './pages/GerenciarTurma';
 import DashboardProfessor from './pages/professor/DashboardProfessor';
 import DiarioClasse from './pages/professor/DiarioClasse';
+import AvaliacaoAluno from './pages/professor/AvaliacaoAluno';
 
 import logoSeduc from './img/seduc-logo2.jpg';
 import RelatoriosTurma from './pages/RelatoriosTurma';
@@ -93,7 +94,7 @@ const LayoutAdmin = ({ children }) => {
 // 3. LAYOUT PROFESSOR (LIMPO, SEM SIDEBAR DE ADMIN)
 // =================================================================
 const LayoutProfessor = ({ children }) => {
-  const { user, signOut } = useAuth();
+  const { user, signOut, alternarPerfil } = useAuth();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -122,8 +123,18 @@ const LayoutProfessor = ({ children }) => {
           {/* Saudação e Logout */}
           <div className="flex items-center gap-6">
             <div className="text-right hidden md:block">
-              <p className="font-medium text-sm">Olá, Prof. {user?.nome?.split(' ')[0]}</p>
-              <p className="text-[10px] text-blue-100 uppercase">Docente</p>
+              <p className="font-medium text-sm">Olá, {user?.nome?.split('(')[0]}</p>
+              <p className="text-[10px] text-blue-100 uppercase">{user?.nome?.match(/\(([^)]+)\)/)?.[1] || 'Docente'}</p>
+            </div>
+
+            <div className="flex bg-yellow-200 rounded-lg p-1 mr-4">
+              <button
+                onClick={() => alternarPerfil('Master')}
+                className="text-xs font-bold px-2 py-1 rounded-md text-yellow-700 hover:bg-yellow-100 transition"
+                title="Voltar para Secretaria"
+              >
+                Voltar p/ Secretaria
+              </button>
             </div>
 
             <button
@@ -229,16 +240,22 @@ function App() {
           </PrivateRoute>
         } />
 
-        <Route path="/professor/diario/:id" element={
+        <Route path="/professor/diario/:turmaId?" element={
           <PrivateRoute allowedRoles={['Professor']}>
             <LayoutProfessor><DiarioClasse /></LayoutProfessor>
           </PrivateRoute>
         } />
 
+        <Route path="/professor/avaliacao" element={
+          <PrivateRoute allowedRoles={['Professor']}>
+            <LayoutProfessor><AvaliacaoAluno /></LayoutProfessor>
+          </PrivateRoute>
+        } />
+
         <Route path="/relatorios" element={<PrivateRoute allowedRoles={['Master', 'Coordenacao']}><LayoutAdmin><RelatoriosTurma /></LayoutAdmin></PrivateRoute>} />
 
-        {/* Rota Padrão (Redireciona para login se url não existir) */}
-        <Route path="*" element={<Navigate to="/login" />} />
+        {/* Rota Padrão (Redireciona para Home se url não existir, o PrivateRoute vai decidir para onde mandar depois) */}
+        <Route path="*" element={<Navigate to="/" />} />
 
       </Routes>
     </AuthProvider>

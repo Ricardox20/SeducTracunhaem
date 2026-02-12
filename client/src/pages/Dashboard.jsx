@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Users, GraduationCap, School, BookOpen, BarChart3, PieChart as PieIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { API_BASE_URL } from '../../infra/apiConfig';
+import { apiService } from '../services/api';
 
 export default function Dashboard() {
     const [dados, setDados] = useState(null);
@@ -19,10 +18,8 @@ export default function Dashboard() {
 
     const carregarDados = async () => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/dashboard-resumo`);
-            // --- DEBUG NO NAVEGADOR (F12) ---
-            console.log("📦 DADOS CHEGANDO NO FRONT:", response.data);
-            setDados(response.data);
+            const dadosMock = await apiService.getDashboardStats();
+            setDados(dadosMock);
         } catch (error) {
             console.error("Erro dashboard:", error);
         } finally {

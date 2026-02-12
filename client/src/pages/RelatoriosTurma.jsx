@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { BarChart3, Filter, BookOpen, AlertTriangle, X, Calendar, User } from 'lucide-react';
-import { API_BASE_URL } from '../../infra/apiConfig';
-// Import dos Gráficos
+import { useEffect, useState } from 'react';
+import { apiService } from '../services/api';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart3, Filter, BookOpen, AlertTriangle, X, Calendar, User, Search } from 'lucide-react';
 
 export default function RelatoriosTurma() {
     const [turmas, setTurmas] = useState([]);
@@ -21,8 +19,8 @@ export default function RelatoriosTurma() {
 
     // 1. Carrega as turmas
     useEffect(() => {
-        axios.get(`${API_BASE_URL}/relatorios/turmas-ativas`)
-            .then(res => setTurmas(res.data))
+        apiService.getTurmasAtivas()
+            .then(data => setTurmas(data))
             .catch(err => console.error(err));
     }, []);
 
@@ -30,9 +28,9 @@ export default function RelatoriosTurma() {
     useEffect(() => {
         if (selectedTurma) {
             setLoading(true);
-            axios.get(`${API_BASE_URL}/relatorios/turmas/${selectedTurma}/disciplinas`)
-                .then(res => {
-                    setDisciplinas(res.data);
+            apiService.getDisciplinasTurma(selectedTurma)
+                .then(data => {
+                    setDisciplinas(data);
                     setSelectedAlocacao('');
                     setDadosStats(null);
                 })
@@ -52,8 +50,8 @@ export default function RelatoriosTurma() {
     const carregarEstatisticasGerais = async () => {
         try {
             // Reusamos a rota que criamos pro professor!
-            const res = await axios.get(`${API_BASE_URL}/alocacoes/${selectedAlocacao}/estatisticas`);
-            setDadosStats(res.data);
+            const data = await apiService.getEstatisticasAlocacao(selectedAlocacao);
+            setDadosStats(data);
         } catch (error) {
             alert("Erro ao carregar métricas.");
         }
@@ -62,8 +60,8 @@ export default function RelatoriosTurma() {
     // 4. Função para abrir o "Raio-X" do Aluno
     const abrirDetalhesAluno = async (aluno) => {
         try {
-            const res = await axios.get(`${API_BASE_URL}/relatorios/aluno/${aluno.matricula_id}/alocacao/${selectedAlocacao}`);
-            setHistoricoAluno(res.data);
+            const data = await apiService.getDetalhesAlunoAlocacao(aluno.matricula_id, selectedAlocacao);
+            setHistoricoAluno(data);
             setAlunoSelecionado(aluno); // Isso abre o modal
         } catch (error) {
             alert("Erro ao buscar histórico do aluno.");

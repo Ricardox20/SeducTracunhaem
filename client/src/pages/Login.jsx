@@ -10,8 +10,15 @@ export default function Login() {
     const [erro, setErro] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const { signIn } = useAuth(); // Pega a função de logar do contexto
+    const { signIn, signed } = useAuth(); // Pega a função de logar do contexto
     const navigate = useNavigate();
+
+    // Se já estiver logado, redireciona
+    React.useEffect(() => {
+        if (signed) {
+            navigate('/');
+        }
+    }, [signed, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
