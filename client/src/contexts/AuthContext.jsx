@@ -13,7 +13,9 @@ export const AuthProvider = ({ children }) => {
   const [escolas, setEscolas] = useState(MOCK_DATA.escolas); //
   const [alunos, setAlunos] = useState(MOCK_DATA.alunos); //
   const [turmas, setTurmas] = useState(MOCK_DATA.turmas); //
+  const [professores, setProfessores] = useState(MOCK_DATA.professores);
   const [escolaIdSelecionada, setEscolaIdSelecionada] = useState(null);
+  const [frequencias, setFrequencias] = useState([]);
 
   // =================================================================
   // 1. EFEITO DE INICIALIZAÇÃO (DESTRAVA A TELA)
@@ -34,6 +36,19 @@ export const AuthProvider = ({ children }) => {
   // =================================================================
   const selecionarEscola = (id) => setEscolaIdSelecionada(Number(id));
 
+  const [diasBloqueados, setDiasBloqueados] = useState([
+  { data: '2026-02-17', motivo: 'Carnaval' },
+  { data: '2026-02-18', motivo: 'Quarta-feira de Cinzas' }
+]);
+
+const bloquearDia = (data, motivo) => {
+  setDiasBloqueados([...diasBloqueados, { data, motivo }]);
+};
+
+const isDiaBloqueado = (data) => {
+  return diasBloqueados.find(d => d.data === data);
+};
+
   const getTurmasPorEscola = () =>
     escolaIdSelecionada ? turmas.filter(t => t.escola_id === escolaIdSelecionada) : [];
 
@@ -48,6 +63,55 @@ export const AuthProvider = ({ children }) => {
     if (user.perfil === 'Master') return turmas;
     return turmas.filter(t => t.nivel_ensino === user.nivel_ensino);
   };
+
+  const salvarPresenca = (data, turmaId, listaPresenca) => {
+  // listaPresenca virá como [{alunoId: 1, status: 'P'}, {alunoId: 2, status: 'F'}]
+  const novoRegistro = {
+    id: frequencias.length + 1,
+    data,
+    turmaId,
+    presencas: listaPresenca
+  };
+  setFrequencias([...frequencias, novoRegistro]);
+  console.log("Chamada salva com sucesso!", novoRegistro);
+};
+
+
+  
+
+// 2. Função para Cadastrar Novo Professor (Geral na rede)
+const adicionarProfessor = (novoProf) => {
+  const profComId = { 
+    ...novoProf, 
+    id: professores.length + 1,
+    escolas_ids: novoProf.escolas_ids || [] // Inicia com vínculo ou vazio
+  };
+  setProfessores([...professores, profComId]);
+};
+
+// 3. Função para Alocar Professor em uma Escola (Vínculo)
+const vincularProfessorEscola = (profId, escolaId) => {
+  setProfessores(professores.map(p => {
+    if (p.id === profId) {
+      // Se já não estiver vinculado, adiciona o ID da escola
+      const novasEscolas = p.escolas_ids.includes(Number(escolaId)) 
+        ? p.escolas_ids 
+        : [...p.escolas_ids, Number(escolaId)];
+      return { ...p, escolas_ids: novasEscolas };
+    }
+    return p;
+  }));
+};
+
+// 4. Função para Remover Vínculo (Desalocar da escola, mas manter no sistema)
+const desvincularProfessorEscola = (profId, escolaId) => {
+  setProfessores(professores.map(p => {
+    if (p.id === profId) {
+      return { ...p, escolas_ids: p.escolas_ids.filter(id => id !== Number(escolaId)) };
+    }
+    return p;
+  }));
+};
 
   // =================================================================
   // 3. CRUDS FUNCIONAIS (MEMÓRIA LOCAL)
@@ -107,7 +171,14 @@ export const AuthProvider = ({ children }) => {
       signed: !!user, user, loading, signIn, signOut,
       escolas, escolaIdSelecionada, selecionarEscola, adicionarEscola,
       alunos, adicionarAluno, editarAluno, excluirAluno, getAlunosPorEscola,
-      turmas, getTurmasPorEscola, getTurmasVinculadas
+      turmas, getTurmasPorEscola, getTurmasVinculadas,
+      professores, 
+    adicionarProfessor, 
+    vincularProfessorEscola, 
+    desvincularProfessorEscola,
+    diasBloqueados, // <--- TEM QUE ESTAR AQUI!
+    bloquearDia,
+    isDiaBloqueado
     }}>
       {children}
     </AuthContext.Provider>

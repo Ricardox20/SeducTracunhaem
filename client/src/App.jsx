@@ -15,6 +15,9 @@ import DiarioClasse from './pages/professor/DiarioClasse';
 import AvaliacaoAluno from './pages/professor/AvaliacaoAluno';
 import Escolas from './pages/Escolas';
 import ListaAlunos from './pages/ListaAlunos';
+import ListaProfessores from './pages/ListaProfessores';
+import CalendarioEscolar from './pages/CalendarioEscolar';
+import FolhaFrequencia from './pages/professor/FolhaFrequencia';
 
 // =================================================================
 // 1. GUARDIÃO DE ROTAS SIMPLIFICADO
@@ -103,51 +106,71 @@ const MainLayout = ({ children }) => {
 function App() {
   return (
     <AuthProvider>
-  <Routes>
-    <Route path="/login" element={<Login />} />
+      <Routes>
+        <Route path="/login" element={<Login />} />
 
-    {/* --- ROTAS ADMINISTRATIVAS --- */}
-    <Route path="/" element={
-      <PrivateRoute allowedRoles={['Master', 'Coordenacao', 'Secretaria']}>
-        <MainLayout><Dashboard /></MainLayout>
-      </PrivateRoute>
-    } />
+        {/* --- ROTAS ADMINISTRATIVAS --- */}
+        <Route path="/" element={
+          <PrivateRoute allowedRoles={['Master', 'Coordenacao', 'Secretaria']}>
+            <MainLayout><Dashboard /></MainLayout>
+          </PrivateRoute>
+        } />
 
-    {/* NOVA ROTA DE ESCOLAS AQUI */}
-    <Route path="/escolas" element={
-      <PrivateRoute allowedRoles={['Master', 'Coordenacao', 'Secretaria']}>
-        <MainLayout><Escolas /></MainLayout>
-      </PrivateRoute>
-    } />
+        {/* NOVA ROTA DE ESCOLAS AQUI */}
+        <Route path="/escolas" element={
+          <PrivateRoute allowedRoles={['Master', 'Coordenacao', 'Secretaria']}>
+            <MainLayout><Escolas /></MainLayout>
+          </PrivateRoute>
+        } />
 
-    <Route path="/alunos" element={
-  <PrivateRoute allowedRoles={['Master', 'Coordenacao', 'Secretaria']}>
-    <MainLayout><ListaAlunos /></MainLayout>
-  </PrivateRoute>
-} />
+        <Route path="/alunos" element={
+          <PrivateRoute allowedRoles={['Master', 'Coordenacao', 'Secretaria']}>
+            <MainLayout><ListaAlunos /></MainLayout>
+          </PrivateRoute>
+        } />
 
-    {/* --- ROTAS DO PROFESSOR --- */}
-    <Route path="/portal-professor" element={
-      <PrivateRoute allowedRoles={['Professor']}>
-        <MainLayout><DashboardProfessor /></MainLayout>
-      </PrivateRoute>
-    } />
+        <Route path="/professores" element={
+          <PrivateRoute allowedRoles={['Master', 'Coordenacao', 'Secretaria']}>
+            <MainLayout><ListaProfessores /></MainLayout>
+          </PrivateRoute>
+        } />
 
-    <Route path="/professor/diario" element={
-      <PrivateRoute allowedRoles={['Professor']}>
-        <MainLayout><DiarioClasse /></MainLayout>
-      </PrivateRoute>
-    } />
+        {/* --- ROTAS DO PROFESSOR --- */}
+        <Route path="/portal-professor" element={
+          <PrivateRoute allowedRoles={['Professor']}>
+            <MainLayout><DashboardProfessor /></MainLayout>
+          </PrivateRoute>
+        } />
 
-    <Route path="/professor/avaliacao" element={
-      <PrivateRoute allowedRoles={['Professor']}>
-        <MainLayout><AvaliacaoAluno /></MainLayout>
-      </PrivateRoute>
-    } />
+        <Route path="/professor/diario" element={
+          <PrivateRoute allowedRoles={['Professor']}>
+            <MainLayout><DiarioClasse /></MainLayout>
+          </PrivateRoute>
+        } />
 
-    <Route path="*" element={<Navigate to="/login" />} />
-  </Routes>
-</AuthProvider>
+        <Route path="/professor/avaliacao" element={
+          <PrivateRoute allowedRoles={['Professor']}>
+            <MainLayout><AvaliacaoAluno /></MainLayout>
+          </PrivateRoute>
+        } />
+
+        {/* ROTA DA SECRETARIA - CALENDÁRIO */}
+        <Route path="/calendario" element={
+          <PrivateRoute allowedRoles={['Master', 'Coordenacao', 'Secretaria']}>
+            <MainLayout><CalendarioEscolar /></MainLayout>
+          </PrivateRoute>
+        } />
+
+        {/* ROTA DO PROFESSOR - FREQUÊNCIA */}
+        <Route path="/professor/frequencia" element={
+          <PrivateRoute allowedRoles={['Professor']}>
+            <MainLayout><FolhaFrequencia /></MainLayout>
+          </PrivateRoute>
+        } />
+
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
+    </AuthProvider>
   );
 }
 

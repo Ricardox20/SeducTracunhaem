@@ -8,7 +8,9 @@ import {
   FileBarChart, 
   LogOut,
   X,
-  School // Importando o ícone de escola
+  School,
+  Calendar,
+  CheckCircle // Importando o ícone de escola
 } from 'lucide-react';
 
 const Sidebar = ({ user, onLogout, isOpen, onClose }) => {
@@ -18,6 +20,7 @@ const Sidebar = ({ user, onLogout, isOpen, onClose }) => {
     { path: '/', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
     { path: '/escolas', label: 'Gestão de Escolas', icon: <School size={20} /> }, // ADICIONADO AQUI
     { path: '/alunos', label: 'Lista de Alunos', icon: <Users size={20} /> },
+    { path: '/calendario', label: 'Calendário Escolar', icon: <Calendar size={20} /> },
     { path: '/professores', label: 'Professores', icon: <GraduationCap size={20} /> },
     { path: '/turmas', label: 'Turmas & Gestão', icon: <BookOpen size={20} /> },
     { path: '/relatorios', label: 'Relatórios', icon: <FileBarChart size={20} /> },
@@ -26,6 +29,7 @@ const Sidebar = ({ user, onLogout, isOpen, onClose }) => {
   const professorMenuItems = [
     { path: '/portal-professor', label: 'Minhas Turmas', icon: <LayoutDashboard size={20} /> },
     { path: '/professor/diario', label: 'Diário de Classe', icon: <BookOpen size={20} /> },
+    { path: '/professor/frequencia', label: 'Frequência (Chamada)', icon: <CheckCircle size={20} /> }, // ADICIONADO
     { path: '/professor/avaliacao', label: 'Avaliações', icon: <FileBarChart size={20} /> },
   ];
 

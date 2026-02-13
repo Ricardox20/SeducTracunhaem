@@ -1,80 +1,114 @@
 import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { MOCK_DATA } from '../../mocks/data';
-import { BookOpen, Users, ClipboardCheck, Award } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import {
+  BookOpen,
+  Users,
+  Calendar,
+  ChevronRight,
+  ClipboardCheck,
+  FileEdit,
+  GraduationCap
+} from 'lucide-react';
 
 const DashboardProfessor = () => {
   const { user, getTurmasVinculadas } = useAuth();
-  const turmas = getTurmasVinculadas(); // Busca turmas do nível específico (Infantil, Iniciais ou Finais)
+  const { alunos: todosAlunos } = useAuth();
+  const turmas = getTurmasVinculadas();
 
   return (
-    <div className="space-y-6">
-      {/* Header de Boas-vindas */}
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-8">
+      {/* 1. SAUDAÇÃO PERSONALIZADA */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800 uppercase">
-            Minhas Turmas <span className="text-primary">- {user?.nivel_ensino}</span>
+          <h1 className="text-3xl font-black text-slate-800 uppercase tracking-tighter italic">
+            Olá, {user?.nome?.split(' ')[0]}!
           </h1>
-          <p className="text-slate-500">Selecione uma turma para gerenciar diários e avaliações.</p>
+          <p className="text-[11px] font-black text-primary uppercase tracking-[0.2em]">
+            Portal do Docente — {user?.nivel_ensino}
+          </p>
         </div>
-      </header>
-
-      {/* Grid de Turmas */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {turmas.map((turma) => (
-          <motion.div 
-            key={turma.id}
-            whileHover={{ y: -5 }}
-            className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"
-          >
-            <div className="p-5 border-b border-slate-100 bg-slate-50">
-              <span className="inline-block px-2 py-1 bg-primary/10 text-primary text-[10px] font-bold rounded mb-2 uppercase">
-                {turma.turno}
-              </span>
-              <h3 className="text-lg font-bold text-slate-800 uppercase leading-tight">
-                {turma.nome}
-              </h3>
-              <p className="text-xs text-slate-500 mt-1 uppercase font-medium">
-                {turma.nome_curso}
-              </p>
-            </div>
-
-            <div className="p-5 space-y-4">
-              <div className="flex items-center justify-between text-sm text-slate-600">
-                <span className="flex items-center gap-2"><Users size={16}/> Alunos:</span>
-                <span className="font-bold">{turma.total_alunos}</span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                {/* Botão Diário - Link para o diário funcional */}
-                <button className="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200 hover:border-primary hover:bg-primary/5 transition-all group">
-                  <ClipboardCheck className="text-slate-400 group-hover:text-primary mb-1" size={20}/>
-                  <span className="text-[10px] font-bold text-slate-600 uppercase">Diário</span>
-                </button>
-
-                {/* Botão Avaliação - Link para notas/conceitos */}
-                <button className="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200 hover:border-primary hover:bg-primary/5 transition-all group">
-                  <Award className="text-slate-400 group-hover:text-primary mb-1" size={20}/>
-                  <span className="text-[10px] font-bold text-slate-600 uppercase">Avaliar</span>
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        ))}
+        <div className="bg-white px-4 py-2 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-3">
+          <div className="p-2 bg-primary/10 text-primary rounded-lg">
+            <Calendar size={18} />
+          </div>
+          <div>
+            <p className="text-[9px] font-black text-slate-400 uppercase leading-none">Hoje é</p>
+            <p className="text-xs font-bold text-slate-700 uppercase">
+              {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* Informativo BNCC Lateral (Opcional) */}
-      <div className="bg-primary/5 border border-primary/20 p-4 rounded-xl flex items-start gap-4">
-        <div className="p-2 bg-primary rounded-lg text-white">
-          <BookOpen size={20}/>
+      {/* 2. GRID DE TURMAS */}
+      <div className="space-y-4">
+        <h2 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+          <GraduationCap size={16} /> Suas Turmas e Disciplinas
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {turmas.map((turma) => (
+            <div key={turma.id} className="group bg-white rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300 overflow-hidden">
+              <div className="p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="p-3 bg-slate-50 text-slate-400 group-hover:bg-primary group-hover:text-white rounded-2xl transition-colors duration-300">
+                    <BookOpen size={24} />
+                  </div>
+                  <span className="px-3 py-1 bg-slate-50 text-slate-400 text-[10px] font-black uppercase rounded-lg group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                    {turma.turno}
+                  </span>
+                </div>
+
+                <h3 className="text-xl font-black text-slate-800 uppercase tracking-tighter mb-1">
+                  {turma.nome}
+                </h3>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-6">
+                  Ensino {turma.nivel_ensino}
+                </p>
+
+                {/* BOTÕES DE AÇÃO RÁPIDA (O PONTO CHAVE) */}
+                <div className="grid grid-cols-2 gap-3">
+                  <Link
+                    to="/professor/frequencia"
+                    className="flex flex-col items-center justify-center p-3 rounded-2xl bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white transition-all duration-300 group/btn shadow-sm"
+                  >
+                    <ClipboardCheck size={20} className="mb-1" />
+                    <span className="text-[9px] font-black uppercase">Chamada</span>
+                  </Link>
+
+                  <Link
+                    to="/professor/diario"
+                    className="flex flex-col items-center justify-center p-3 rounded-2xl bg-primary/5 text-primary hover:bg-primary hover:text-white transition-all duration-300 group/btn shadow-sm"
+                  >
+                    <FileEdit size={20} className="mb-1" />
+                    <span className="text-[9px] font-black uppercase">Diário</span>
+                  </Link>
+                </div>
+              </div>
+
+              <div className="bg-slate-50 px-6 py-4 flex justify-between items-center group-hover:bg-slate-100 transition-colors">
+                <div className="flex items-center gap-2">
+                  <Users size={14} className="text-slate-400" />
+                  <span className="text-[10px] font-black text-slate-500 uppercase">
+                    {/* Aqui fazemos a contagem real baseada no mock */}
+                    {todosAlunos.filter(a => Number(a.turma_id) === Number(turma.id)).length} Alunos
+                  </span>
+                </div>
+                <ChevronRight size={16} className="text-slate-300 group-hover:text-primary group-hover:translate-x-1 transition-all" />
+              </div>
+            </div>
+          ))}
         </div>
+      </div>
+
+      {/* 3. AVISOS RÁPIDOS (Simulação de Regras) */}
+      <div className="bg-amber-50 border border-amber-100 p-4 rounded-2xl flex items-start gap-4">
+        <div className="p-2 bg-amber-100 text-amber-600 rounded-xl font-bold">!</div>
         <div>
-          <h4 className="text-sm font-bold text-primary uppercase">Lembrete Pedagógico</h4>
-          <p className="text-xs text-slate-600 mt-1">
-            {user?.nivel_ensino === 'Infantil' 
-              ? 'Não esqueça de preencher o registro de vivências e objetivos de aprendizagem mensais.' 
-              : 'As notas do 1º bimestre devem ser lançadas conforme o calendário escolar.'}
+          <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest leading-none mb-1">Lembrete da Coordenação</p>
+          <p className="text-xs font-medium text-amber-800">
+            O prazo para fechamento dos diários do 1º Bimestre encerra em 15 dias. Não deixe para a última hora!
           </p>
         </div>
       </div>

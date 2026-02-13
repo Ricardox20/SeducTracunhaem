@@ -119,5 +119,10 @@ export const MOCK_DATA = {
         { id: 58, nome: "Maitê Pinheiro Galvão", turma_id: 302, status: "Ativo" },
         { id: 59, nome: "Francisco Barros Aragão", turma_id: 302, status: "Ativo" },
         { id: 60, nome: "Olívia Sampaio Abreu", turma_id: 302, status: "Ativo" }
-    ]
+    ], professores: [
+    { id: 1, nome: "ANA CLARA SILVA", email: "ana.clara@seduc.com", nivel: "Infantil", escolas_ids: [1, 2] },
+    { id: 2, nome: "MARCOS OLIVEIRA", email: "marcos.o@seduc.com", nivel: "Finais", escolas_ids: [1, 3] },
+    { id: 3, nome: "JULIA MENDES", email: "julia.m@seduc.com", nivel: "Iniciais", escolas_ids: [2, 3] },
+    { id: 4, nome: "ROBERTO CARLOS", email: "roberto.c@seduc.com", nivel: "Finais", escolas_ids: [1, 2, 3] },
+  ]
 };

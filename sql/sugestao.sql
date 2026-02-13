@@ -66,9 +66,20 @@ CREATE TABLE usuarios (
 CREATE TABLE professores (
     id INT PRIMARY KEY AUTO_INCREMENT,
     pessoa_id INT NOT NULL,
+    -- escola_id foi removido daqui
+    FOREIGN KEY (pessoa_id) REFERENCES pessoas(id) ON DELETE CASCADE
+);
+
+-- 2. Criamos a tabela de Vínculos/Lotação
+CREATE TABLE professor_escolas (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    professor_id INT NOT NULL,
     escola_id INT NOT NULL,
-    FOREIGN KEY (pessoa_id) REFERENCES pessoas(id) ON DELETE CASCADE,
-    FOREIGN KEY (escola_id) REFERENCES escolas(id) ON DELETE CASCADE
+    data_lotacao DATE DEFAULT (CURRENT_DATE),
+    status ENUM('Ativo', 'Licenca', 'Encerrado') DEFAULT 'Ativo',
+    FOREIGN KEY (professor_id) REFERENCES professores(id) ON DELETE CASCADE,
+    FOREIGN KEY (escola_id) REFERENCES escolas(id) ON DELETE CASCADE,
+    UNIQUE(professor_id, escola_id) -- Impede duplicar o mesmo vínculo
 );
 
 CREATE TABLE alunos (
