@@ -246,12 +246,29 @@ function App() {
         <Route path="/professor/frequencia" element={<Navigate to="/portal-professor" />} />
         <Route path="/professor/diario" element={<Navigate to="/portal-professor" />} />
 
-        <Route path="/portal-professor/planejamento/:turmaId" element={<PlanejamentoDocente />} />
-        <Route path="/portal-professor/frequencia/:turmaId" element={<FolhaFrequencia />} />
+        <Route path="/portal-professor/planejamento/:turmaId" element={
+          <PrivateRoute allowedRoles={['Professor']}>
+            <MainLayout><PlanejamentoDocente /></MainLayout>
+          </PrivateRoute>
+        } />
 
-        <Route path="/portal-professor/acompanhamento/:turmaId" element={<AcompanhamentoPedagogico />} />
+        <Route path="/portal-professor/frequencia/:turmaId" element={
+          <PrivateRoute allowedRoles={['Professor']}>
+            <MainLayout><FolhaFrequencia /></MainLayout>
+          </PrivateRoute>
+        } />
 
-        <Route path="/portal-professor/conceitos/:turmaId" element={<LancamentoConceitos />} />
+        <Route path="/portal-professor/acompanhamento/:turmaId" element={
+          <PrivateRoute allowedRoles={['Professor']}>
+            <MainLayout><AcompanhamentoPedagogico /></MainLayout>
+          </PrivateRoute>
+        } />
+
+        <Route path="/portal-professor/conceitos/:turmaId" element={
+          <PrivateRoute allowedRoles={['Professor']}>
+            <MainLayout><LancamentoConceitos /></MainLayout>
+          </PrivateRoute>
+        } />
 
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
